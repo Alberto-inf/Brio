@@ -66,7 +66,7 @@ export default function MobileMenu({ open, onClose }: MobileMenuProps) {
             aria-modal="true"
             aria-label="Menú de navegación"
           >
-            <header className="flex items-center justify-between px-5 sm:px-6 h-16 border-b border-brio-line">
+            <header className="flex items-center justify-between px-5 sm:px-6 h-20 border-b border-brio-line">
               <Logo variant="full" />
               <button
                 type="button"
