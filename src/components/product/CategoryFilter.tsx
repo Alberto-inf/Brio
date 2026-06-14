@@ -18,7 +18,7 @@ export default function CategoryFilter() {
   const isActive = (id: string) => current === id;
 
   return (
-    <div className="border border-brio-line bg-brio-black/60 backdrop-blur-sm">
+    <div className="border border-brio-line bg-brio-black md:bg-brio-black/95 backdrop-blur-sm relative">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -31,7 +31,7 @@ export default function CategoryFilter() {
         </motion.span>
       </button>
 
-      <div className="hidden md:block p-3">
+      <div className="hidden md:block p-4 md:max-h-[calc(100vh-7rem)] md:overflow-y-auto">
         <FilterList isActive={isActive} pathname={pathname} />
       </div>
 
@@ -62,53 +62,65 @@ function FilterList({
   pathname: string;
 }) {
   return (
-    <div className="flex flex-col gap-1">
-      <Link
-        href="/colecciones"
-        className={cn(
-          'flex items-center justify-between px-3 py-2.5 text-[10px] uppercase tracking-[0.28em] transition-colors',
-          isActive('todos')
-            ? 'text-brio-silver bg-brio-gray-light/40'
-            : 'text-brio-white/70 hover:text-brio-white hover:bg-brio-gray-light/30'
-        )}
-      >
-        <span>Todos</span>
-        {isActive('todos') && <span>•</span>}
-      </Link>
+    <nav aria-label="Filtros" className="flex flex-col">
+      <h2 className="text-[10px] uppercase tracking-[0.32em] text-brio-white/50 mb-3 px-1">
+        Categoría
+      </h2>
 
-      {sections.map((s) => (
+      <div className="flex flex-col">
         <Link
-          key={s.id}
-          href={s.href}
+          href="/colecciones"
           className={cn(
-            'flex items-center justify-between px-3 py-2.5 text-[10px] uppercase tracking-[0.28em] transition-colors',
-            isActive(s.id)
-              ? 'text-brio-silver bg-brio-gray-light/40'
-              : 'text-brio-white/70 hover:text-brio-white hover:bg-brio-gray-light/30'
+            'flex items-center justify-between px-1 py-1.5 text-xs transition-colors',
+            isActive('todos')
+              ? 'text-brio-silver font-medium'
+              : 'text-brio-white/70 hover:text-brio-white'
           )}
         >
-          <span>{s.label}</span>
-          {isActive(s.id) && <span>•</span>}
+          <span>Todos</span>
+          {isActive('todos') && <span className="text-brio-silver">•</span>}
         </Link>
-      ))}
 
-      <div className="my-2 mx-3 h-px bg-brio-line" />
+        {sections.map((s) => (
+          <Link
+            key={s.id}
+            href={s.href}
+            className={cn(
+              'flex items-center justify-between px-1 py-1.5 text-xs transition-colors',
+              isActive(s.id)
+                ? 'text-brio-silver font-medium'
+                : 'text-brio-white/70 hover:text-brio-white'
+            )}
+          >
+            <span>{s.label}</span>
+            {isActive(s.id) && <span className="text-brio-silver">•</span>}
+          </Link>
+        ))}
+      </div>
 
-      {categories.map((c) => (
-        <Link
-          key={c.id}
-          href={c.href}
-          className={cn(
-            'flex items-center justify-between pl-7 pr-3 py-2 text-[10px] uppercase tracking-[0.24em] transition-colors',
-            isActive(c.id)
-              ? 'text-brio-silver bg-brio-gray-light/40'
-              : 'text-brio-white/55 hover:text-brio-white'
-          )}
-        >
-          <span>{c.label}</span>
-          {isActive(c.id) && <span>•</span>}
-        </Link>
-      ))}
-    </div>
+      <div className="my-3 h-px bg-brio-line" />
+
+      <h2 className="text-[10px] uppercase tracking-[0.32em] text-brio-white/50 mb-3 px-1">
+        Tipo
+      </h2>
+
+      <div className="flex flex-col">
+        {categories.map((c) => (
+          <Link
+            key={c.id}
+            href={c.href}
+            className={cn(
+              'flex items-center justify-between px-1 py-1.5 text-xs transition-colors',
+              isActive(c.id)
+                ? 'text-brio-silver font-medium'
+                : 'text-brio-white/60 hover:text-brio-white'
+            )}
+          >
+            <span>{c.label}</span>
+            {isActive(c.id) && <span className="text-brio-silver">•</span>}
+          </Link>
+        ))}
+      </div>
+    </nav>
   );
 }

@@ -7,7 +7,7 @@ import { motion, useReducedMotion } from 'framer-motion';
 export default function Hero() {
   const reduce = useReducedMotion();
   return (
-    <section className="relative min-h-[88svh] md:min-h-[92svh] flex items-end md:items-center overflow-hidden bg-brio-black">
+    <section className="relative min-h-[70svh] md:min-h-[92svh] flex items-end md:items-center overflow-hidden bg-brio-black">
       <div className="absolute inset-0">
         <motion.div
           initial={reduce ? { scale: 1 } : { scale: 1.08 }}
@@ -16,12 +16,12 @@ export default function Hero() {
           className="absolute inset-0"
         >
           <Image
-            src="/images/products/p11.jpeg"
+            src="/images/modelo1.jpeg"
             alt="Colección Brío"
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center"
+            className="object-cover object-[center_40%] md:object-[center_55%]"
           />
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-t from-brio-black via-brio-black/50 to-brio-black/30" />

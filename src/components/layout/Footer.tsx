@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Logo from '@/components/ui/Logo';
 import { menu } from '@/lib/categories';
+import { IconPhone } from '@/components/ui/Icons';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -66,6 +67,43 @@ export default function Footer() {
               <li>+34 600 000 000</li>
               <li>España</li>
             </ul>
+            <div className="mt-5 flex items-center gap-3">
+              <Link
+                href="mailto:hola@brio.com"
+                aria-label="Enviar email"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-brio-line bg-brio-white hover:border-brio-white hover:bg-brio-silver-soft transition-colors"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/email-icon.svg"
+                  alt=""
+                  className="w-7 h-7"
+                  draggable={false}
+                />
+              </Link>
+              <Link
+                href="https://wa.me/34600000000"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#25D366] bg-[#25D366] hover:bg-[#1ebe5a] hover:border-[#1ebe5a] transition-colors"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/images/whatsapp-icon.svg"
+                  alt=""
+                  className="w-7 h-7"
+                  draggable={false}
+                />
+              </Link>
+              <Link
+                href="tel:+34600000000"
+                aria-label="Llamar"
+                className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-[#3b82f6] bg-[#3b82f6] text-brio-white hover:bg-[#2563eb] hover:border-[#2563eb] transition-colors"
+              >
+                <IconPhone className="w-7 h-7" />
+              </Link>
+            </div>
           </div>
         </div>
 

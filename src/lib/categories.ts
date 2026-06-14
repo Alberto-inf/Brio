@@ -34,7 +34,7 @@ export const sections: SectionInfo[] = [
     label: 'Total Look',
     href: '/colecciones?cat=total-look',
     description: 'Conjuntos completos listos para brillar.',
-    image: '/images/products/p11.jpeg',
+    image: '/images/modelo2.avif',
   },
   {
     id: 'exclusivos',

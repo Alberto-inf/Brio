@@ -58,14 +58,14 @@ export default async function ColeccionesPage(props: {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-[260px,1fr] gap-8">
-          <aside className="md:sticky md:top-28 md:self-start">
+        <div className="grid grid-cols-1 md:grid-cols-[200px_1fr] md:items-start gap-6 md:gap-10">
+          <aside className="md:sticky md:top-28 md:z-30 md:self-start md:max-h-[calc(100vh-7rem)]">
             <Suspense fallback={<div className="h-40 border border-brio-line animate-pulse" />}>
               <CategoryFilter />
             </Suspense>
           </aside>
 
-          <div>
+          <div className="min-w-0">
             <div className="flex items-center justify-between mb-6">
               <span className="text-[10px] uppercase tracking-[0.32em] text-brio-white/50">
                 Vista

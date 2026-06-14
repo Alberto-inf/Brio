@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import Logo from '@/components/ui/Logo';
 import IconButton from '@/components/ui/IconButton';
 import { IconCart, IconUser, IconHeart, IconSearch } from '@/components/ui/Icons';
@@ -20,10 +20,14 @@ export default function Header() {
   const { itemCount, openCart } = useCart();
   const { count: favCount } = useFavorites();
   const pathname = usePathname();
+  const sp = useSearchParams();
   const reduce = useReducedMotion();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      setActiveMenu(null);
+    };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
@@ -62,9 +66,18 @@ export default function Header() {
                 {menu.map((item) => {
                   const hasChildren = !!item.children;
                   const isOpen = activeMenu === item.id;
+                  const [base, query] = (item.href ?? '').split('?');
+                  const activeCat = query?.startsWith('cat=') ? query.slice(4) : null;
+                  const childIds = item.children?.map((c) => c.id) ?? [];
+                  const currentCat = sp.get('cat');
+                  const isActiveChild = !!currentCat && childIds.includes(currentCat as never);
                   const isActive =
                     item.href === pathname ||
-                    (item.href && pathname.startsWith(item.href.split('?')[0]) && item.href !== '/');
+                    isActiveChild ||
+                    (!!base &&
+                      pathname.startsWith(base) &&
+                      item.href !== '/' &&
+                      (activeCat ? currentCat === activeCat : true));
                   return (
                     <li
                       key={item.id}
@@ -78,7 +91,7 @@ export default function Header() {
                           onClick={() => setActiveMenu(isOpen ? null : item.id)}
                           className={cn(
                             'group relative flex items-center gap-1.5 px-3 xl:px-4 py-2 text-[12px] uppercase tracking-[0.22em] transition-colors',
-                            isOpen
+                            isOpen || isActive
                               ? 'text-brio-silver'
                               : 'text-brio-white/70 hover:text-brio-white'
                           )}
@@ -88,7 +101,7 @@ export default function Header() {
                             <span
                               className={cn(
                                 'absolute -bottom-1 left-0 h-px bg-brio-silver transition-all duration-500',
-                                isOpen ? 'w-full' : 'w-0 group-hover:w-full'
+                                isOpen || isActive ? 'w-full' : 'w-0 group-hover:w-full'
                               )}
                             />
                           </span>
@@ -145,6 +158,7 @@ export default function Header() {
                                 >
                                   <Link
                                     href={child.href ?? '#'}
+                                    onClick={() => setActiveMenu(null)}
                                     className="group flex items-center justify-between px-5 py-3 text-[10px] uppercase tracking-[0.24em] text-brio-white/70 hover:text-brio-white hover:bg-brio-gray-light/40 transition-colors"
                                   >
                                     <span>{child.label}</span>

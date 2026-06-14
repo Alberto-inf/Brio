@@ -1,18 +1,67 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useToast } from '@/lib/Toast';
+import { cn } from '@/lib/utils';
+
+type FormState = { name: string; email: string; subject: string; message: string };
+
+const EMPTY: FormState = { name: '', email: '', subject: '', message: '' };
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export default function Contacto() {
   const { show } = useToast();
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [form, setForm] = useState<FormState>(EMPTY);
+  const [touched, setTouched] = useState<Record<keyof FormState, boolean>>({
+    name: false,
+    email: false,
+    subject: false,
+    message: false,
+  });
+  const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
 
-  const onSubmit = (e: React.FormEvent) => {
+  const errors = useMemo(() => {
+    const e: Partial<Record<keyof FormState, string>> = {};
+    if (!form.name.trim()) e.name = 'El nombre es obligatorio.';
+    if (!form.email.trim()) e.email = 'El email es obligatorio.';
+    else if (!EMAIL_RE.test(form.email.trim())) e.email = 'Introduce un email válido.';
+    if (!form.subject.trim()) e.subject = 'El asunto es obligatorio.';
+    if (!form.message.trim()) e.message = 'El mensaje es obligatorio.';
+    return e;
+  }, [form]);
+
+  const hasErrors = Object.keys(errors).length > 0;
+  const showError = (key: keyof FormState) => touched[key] && errors[key];
+
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    show('Mensaje enviado. Te responderemos pronto.');
-    setSent(true);
-    setForm({ name: '', email: '', subject: '', message: '' });
+    setTouched({ name: true, email: true, subject: true, message: true });
+    if (hasErrors) {
+      show('Revisa los campos marcados en rojo.', 'error');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        show('No hemos podido enviar el mensaje. Inténtalo de nuevo.', 'error');
+        return;
+      }
+      show('Mensaje enviado. Te responderemos pronto.');
+      setSent(true);
+      setForm(EMPTY);
+      setTouched({ name: false, email: false, subject: false, message: false });
+    } catch {
+      show('No hemos podido enviar el mensaje. Inténtalo de nuevo.', 'error');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -60,43 +109,67 @@ export default function Contacto() {
             </div>
           </div>
 
-          <form onSubmit={onSubmit} className="space-y-5">
+          <form onSubmit={onSubmit} noValidate className="space-y-5">
             <Field
               label="Nombre"
               value={form.name}
-              onChange={(v) => setForm({ ...form, name: v })}
-              required
+              onChange={(v) => setForm((f) => ({ ...f, name: v }))}
+              onBlur={() => setTouched((t) => ({ ...t, name: true }))}
+              error={showError('name')}
             />
             <Field
               label="Email"
               type="email"
               value={form.email}
-              onChange={(v) => setForm({ ...form, email: v })}
-              required
+              onChange={(v) => setForm((f) => ({ ...f, email: v }))}
+              onBlur={() => setTouched((t) => ({ ...t, email: true }))}
+              error={showError('email')}
             />
             <Field
               label="Asunto"
               value={form.subject}
-              onChange={(v) => setForm({ ...form, subject: v })}
-              required
+              onChange={(v) => setForm((f) => ({ ...f, subject: v }))}
+              onBlur={() => setTouched((t) => ({ ...t, subject: true }))}
+              error={showError('subject')}
             />
             <div>
-              <label className="block text-[10px] uppercase tracking-[0.32em] text-brio-white/60 mb-2">
+              <label
+                className={cn(
+                  'block text-[10px] uppercase tracking-[0.32em] mb-2',
+                  showError('message') ? 'text-red-400' : 'text-brio-white/60'
+                )}
+              >
                 Mensaje
               </label>
               <textarea
                 value={form.message}
-                onChange={(e) => setForm({ ...form, message: e.target.value })}
-                required
+                onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+                onBlur={() => setTouched((t) => ({ ...t, message: true }))}
                 rows={6}
-                className="w-full bg-transparent border border-brio-line px-4 py-3 text-sm text-brio-white focus:outline-none focus:border-brio-silver transition-colors resize-none"
+                aria-invalid={!!showError('message')}
+                className={cn(
+                  'w-full bg-transparent border px-4 py-3 text-sm text-brio-white focus:outline-none transition-colors resize-none',
+                  showError('message')
+                    ? 'border-red-500 focus:border-red-400'
+                    : 'border-brio-line focus:border-brio-silver'
+                )}
               />
+              {showError('message') && (
+                <p className="mt-1.5 text-[11px] text-red-400">{errors.message}</p>
+              )}
             </div>
+
             <button
               type="submit"
-              className="w-full h-12 bg-brio-white text-brio-black text-[10px] uppercase tracking-[0.32em] hover:bg-brio-silver-soft transition-colors"
+              disabled={hasErrors || submitting || sent}
+              className={cn(
+                'w-full h-12 text-[10px] uppercase tracking-[0.32em] transition-colors',
+                hasErrors || submitting || sent
+                  ? 'bg-brio-gray text-brio-white/40 cursor-not-allowed'
+                  : 'bg-brio-white text-brio-black hover:bg-brio-silver-soft'
+              )}
             >
-              {sent ? 'Enviado' : 'Enviar mensaje'}
+              {submitting ? 'Enviando…' : sent ? 'Enviado' : 'Enviar mensaje'}
             </button>
           </form>
         </div>
@@ -109,27 +182,39 @@ function Field({
   label,
   value,
   onChange,
+  onBlur,
   type = 'text',
-  required,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
   type?: string;
-  required?: boolean;
+  error?: string;
 }) {
   return (
     <div>
-      <label className="block text-[10px] uppercase tracking-[0.32em] text-brio-white/60 mb-2">
+      <label
+        className={cn(
+          'block text-[10px] uppercase tracking-[0.32em] mb-2',
+          error ? 'text-red-400' : 'text-brio-white/60'
+        )}
+      >
         {label}
       </label>
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        required={required}
-        className="w-full bg-transparent border border-brio-line px-4 py-3 text-sm text-brio-white focus:outline-none focus:border-brio-silver transition-colors"
+        onBlur={onBlur}
+        aria-invalid={!!error}
+        className={cn(
+          'w-full bg-transparent border px-4 py-3 text-sm text-brio-white focus:outline-none transition-colors',
+          error ? 'border-red-500 focus:border-red-400' : 'border-brio-line focus:border-brio-silver'
+        )}
       />
+      {error && <p className="mt-1.5 text-[11px] text-red-400">{error}</p>}
     </div>
   );
 }
