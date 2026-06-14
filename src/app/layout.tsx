@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import './globals.css';
 import { CartProvider } from '@/lib/CartContext';
 import { FavoritesProvider } from '@/lib/FavoritesContext';
@@ -22,7 +23,9 @@ export default function RootLayout({
         <ToastProvider>
           <FavoritesProvider>
             <CartProvider>
-              <Header />
+              <Suspense fallback={null}>
+                <Header />
+              </Suspense>
               <main className="flex-1">{children}</main>
               <Footer />
               <CartDrawer />

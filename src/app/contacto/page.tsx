@@ -33,7 +33,8 @@ export default function Contacto() {
   }, [form]);
 
   const hasErrors = Object.keys(errors).length > 0;
-  const showError = (key: keyof FormState) => touched[key] && errors[key];
+  const showError = (key: keyof FormState): string | undefined =>
+    touched[key] ? errors[key] : undefined;
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
