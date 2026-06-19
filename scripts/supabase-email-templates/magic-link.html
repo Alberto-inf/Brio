@@ -1,0 +1,114 @@
+<!--
+  Plantilla de email de MAGIC LINK
+  --------------------------------
+  Ruta en el dashboard:
+    Authentication → Email Templates → "Magic link"
+
+  ¿Qué es un magic link?
+  ----------------------
+  Es un método de login SIN contraseña: el usuario introduce su email,
+  Supabase le envía un enlace único, hace clic y entra a la web.
+
+  En Brio el login principal es "email + password", pero Supabase trae
+  esta plantilla activada por defecto. La dejamos con el mismo estilo
+  para que, si alguien la usa, el email siga la estética de la marca.
+
+  Pega este HTML en el editor "Source" y guarda.
+-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0a0a0a; padding:32px 16px; font-family:Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif; color:#f5f5f5;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px; background:#0a0a0a; border:1px solid rgba(245,245,245,0.10);">
+
+        <!-- Logo / wordmark -->
+        <tr>
+          <td align="center" style="padding:40px 24px 12px 24px;">
+            <div style="font-family:'Playfair Display', Georgia, serif; font-size:34px; letter-spacing:0.42em; color:#f5f5f5; text-transform:uppercase;">
+              Brío
+            </div>
+            <div style="margin-top:8px; width:32px; height:1px; background:#c0c0c0;"></div>
+          </td>
+        </tr>
+
+        <!-- Saludo -->
+        <tr>
+          <td align="center" style="padding:16px 32px 0 32px;">
+            <p style="margin:0; font-family:'Playfair Display', Georgia, serif; font-style:italic; font-size:22px; color:#f5f5f5;">
+              Tu acceso a Brío
+            </p>
+          </td>
+        </tr>
+
+        <!-- Texto breve -->
+        <tr>
+          <td style="padding:20px 40px 8px 40px;">
+            <p style="margin:0; font-size:14px; line-height:1.7; color:rgba(245,245,245,0.78); text-align:center;">
+              Pulsa el botón para iniciar sesión en tu cuenta. No necesitas
+              recordar ninguna contraseña.
+            </p>
+          </td>
+        </tr>
+
+        <!-- Botón principal -->
+        <tr>
+          <td align="center" style="padding:24px 24px 8px 24px;">
+            <a href="{{ .ConfirmationURL }}"
+               style="display:inline-block; padding:16px 36px; background:#f5f5f5; color:#0a0a0a; text-decoration:none; font-size:11px; letter-spacing:0.28em; text-transform:uppercase; font-weight:500; border:1px solid #f5f5f5;">
+              Entrar en Brío
+            </a>
+          </td>
+        </tr>
+
+        <!-- Enlace plano (fallback) -->
+        <tr>
+          <td style="padding:16px 40px 8px 40px;">
+            <p style="margin:0; font-size:12px; line-height:1.6; color:rgba(245,245,245,0.45); text-align:center; word-break:break-all;">
+              Si el botón no funciona, copia y pega este enlace en tu navegador:<br />
+              <a href="{{ .ConfirmationURL }}" style="color:#c0c0c0; text-decoration:underline;">{{ .ConfirmationURL }}</a>
+            </p>
+          </td>
+        </tr>
+
+        <!-- Aviso de caducidad -->
+        <tr>
+          <td style="padding:16px 40px 8px 40px;">
+            <p style="margin:0; font-size:12px; line-height:1.6; color:rgba(245,245,245,0.45); text-align:center;">
+              Por seguridad, este enlace sólo se puede usar una vez y caduca
+              en 1 hora.
+            </p>
+          </td>
+        </tr>
+
+        <!-- Separador -->
+        <tr>
+          <td style="padding:24px 40px 0 40px;">
+            <div style="height:1px; background:rgba(245,245,245,0.10);"></div>
+          </td>
+        </tr>
+
+        <!-- Agradecimientos -->
+        <tr>
+          <td align="center" style="padding:24px 40px 12px 40px;">
+            <p style="margin:0; font-size:13px; line-height:1.7; color:rgba(245,245,245,0.70); text-align:center;">
+              Nos vemos dentro.
+            </p>
+            <p style="margin:8px 0 0 0; font-family:'Playfair Display', Georgia, serif; font-style:italic; font-size:15px; color:#c0c0c0; text-align:center;">
+              El equipo de Brío
+            </p>
+          </td>
+        </tr>
+
+        <!-- Pie -->
+        <tr>
+          <td align="center" style="padding:8px 40px 40px 40px;">
+            <p style="margin:0; font-size:11px; color:rgba(245,245,245,0.35); text-align:center;">
+              Has recibido este correo porque se ha solicitado un enlace de
+              acceso para {{ .Email }}. Si no has sido tú, ignora este mensaje.
+            </p>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+  </tr>
+</table>

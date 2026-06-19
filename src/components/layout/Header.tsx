@@ -6,7 +6,8 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Logo from '@/components/ui/Logo';
 import IconButton from '@/components/ui/IconButton';
-import { IconCart, IconUser, IconHeart, IconSearch } from '@/components/ui/Icons';
+import { IconCart, IconHeart, IconSearch } from '@/components/ui/Icons';
+import UserMenu from '@/components/auth/UserMenu';
 import { useCart } from '@/lib/CartContext';
 import { useFavorites } from '@/lib/FavoritesContext';
 import { menu } from '@/lib/categories';
@@ -199,9 +200,7 @@ export default function Header() {
                   </span>
                 )}
               </Link>
-              <IconButton label="Iniciar sesión" className="hidden lg:inline-flex">
-                <IconUser className="w-4 h-4" />
-              </IconButton>
+              <UserMenu />
               <IconButton
                 label="Carrito"
                 badge={itemCount}

@@ -4,6 +4,7 @@ import './globals.css';
 import { CartProvider } from '@/lib/CartContext';
 import { FavoritesProvider } from '@/lib/FavoritesContext';
 import { ToastProvider } from '@/lib/Toast';
+import { AuthProvider } from '@/lib/auth/AuthContext';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CartDrawer from '@/components/layout/CartDrawer';
@@ -23,12 +24,14 @@ export default function RootLayout({
         <ToastProvider>
           <FavoritesProvider>
             <CartProvider>
-              <Suspense fallback={null}>
-                <Header />
-              </Suspense>
-              <main className="flex-1">{children}</main>
-              <Footer />
-              <CartDrawer />
+              <AuthProvider>
+                <Suspense fallback={null}>
+                  <Header />
+                </Suspense>
+                <main className="flex-1">{children}</main>
+                <Footer />
+                <CartDrawer />
+              </AuthProvider>
             </CartProvider>
           </FavoritesProvider>
         </ToastProvider>
